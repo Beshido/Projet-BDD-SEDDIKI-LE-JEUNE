@@ -1,3 +1,5 @@
+from typing import Tuple, Union
+
 class Variable:
     """
     Classe pour représenter une variable dans une contrainte.
@@ -79,49 +81,47 @@ class Constant:
     
     
 class TGD:
-    def __init__(self, body, head):
-        self.body = body
+    def __init__(self, head, body):
         self.head = head
+        self.body = body
         self.applied_to = set()
-
-    def is_satisfied_by(self, tuple):
-        return all(tuple[v.index] == c.value if isinstance(c, Constant) else True for v, c in zip(self.body, self.head))
-
-    def is_head_satisfied_by(self, tuple):
-        return all(tuple[v.index] == c.value if isinstance(c, Constant) else False for v, c in zip(self.body, self.head))
-
-    def is_applied_to(self, tuple):
-        return tuple in self.applied_to
-
-    def mark_applied(self, tuple):
-        self.applied_to.add(tuple)
-
-    def get_new_tuple(self, tuple):
-        return tuple + tuple[len(self.body):]
+    
+    def is_satisfied_by(self, relation):
+        return all(t in relation for t in self.body) and any(t not in relation for t in self.head)
+    
+    def is_head_satisfied_by(self, relation):
+        return all(t in relation for t in self.head)
+    
+    def is_applied_to(self, relation):
+        return relation in self.applied_to
+    
+    def get_new_tuple(self, relation):
+        return tuple(t for t in relation) + tuple(t for t in self.head if t not in relation)
+    
+    def mark_applied(self, relation):
+        self.applied_to.add(relation)
 
     def __str__(self):
         return f"{','.join(str(v) for v in self.body)} -> {','.join(str(c) for c in self.head)}"
 
 
 class EGD:
-    def __init__(self, variables):
-        self.variables = variables
+    def __init__(self, lhs, rhs):
+        self.lhs = lhs
+        self.rhs = rhs
         self.applied_to = set()
+    
+    def is_satisfied_by(self, relation):
+        return all(t1 == t2 for t1, t2 in zip(relation[self.lhs], relation[self.rhs]))
+    
+    def equalize(self, relation):
+        relation[self.rhs] = tuple(relation[self.lhs][i] for i in range(len(relation[self.lhs])))
 
-    def is_satisfied_by(self, tuple):
-        values = [tuple[v.index] if isinstance(v, Variable) else v.value for v in self.variables]
-        return len(set(values)) == 1
-
-    def is_applied_to(self, tuple):
-        return tuple in self.applied_to
-
-    def mark_applied(self, tuple):
-        self.applied_to.add(tuple)
-
-    def equalize(self, tuple):
-        values = [tuple[v.index] for v in self.variables]
-        for v in self.variables:
-            tuple[v.index] = values[0]
+    def is_applied_to(self, relation):
+        return relation in self.applied_to
+    
+    def mark_applied(self, relation):
+        self.applied_to.add(relation)
 
     def __str__(self):
         return f"{','.join(str(v) for v in self.variables)}"
