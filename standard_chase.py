@@ -24,14 +24,11 @@ def standard_chase(D, sigma):
     return all(e.is_satisfied_by(D) for e in sigma)
 
 class Database:
-    def __init__(self, relations, constraints):
-        """
-        Initialise une base de données avec un ensemble de relations et de contraintes.
-        :param relations: un dictionnaire où chaque clé est le nom d'une relation et chaque valeur est un ensemble de tuples
-        :param constraints: une liste d'objets TGD et EGD représentant les contraintes de la base de données
-        """
-        self.relations = relations
-        self.constraints = constraints
+    def __init__(self, *relations, constraints=None):
+        self.relations = {}
+        for rel in relations:
+            self.relations[rel.name] = rel
+        self.constraints = constraints or []
     
     def is_conformant(self):
         """
