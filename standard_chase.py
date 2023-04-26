@@ -1,3 +1,6 @@
+from constraints import *
+from typing import List, Set, Tuple
+
 def standard_chase(D, sigma):
     """
     Vérifie si la base de données D satisfait l'ensemble de contraintes sigma en utilisant l'algorithme Standard Chase.
@@ -24,12 +27,10 @@ def standard_chase(D, sigma):
     return all(e.is_satisfied_by(D) for e in sigma)
 
 class Database:
-    def __init__(self, *relations, constraints=None):
-        self.relations = {}
-        for rel in relations:
-            self.relations[rel.name] = rel
+    def __init__(self, relations=None, constraints=None):
+        self.relations = relations or {}
         self.constraints = constraints or []
-    
+
     def is_conformant(self):
         """
         Vérifie si la base de données est conforme aux contraintes en utilisant l'algorithme Standard Chase.
@@ -44,3 +45,6 @@ class Database:
         """
         return set.union(*[self.relations[rel] for rel in self.relations])
 
+    def print_database(self):
+        for rel_name, rel in self.relations.items():
+            print(rel)

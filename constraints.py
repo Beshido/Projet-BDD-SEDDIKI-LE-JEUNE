@@ -1,14 +1,19 @@
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 class Attribute:
-    def __init__(self, name: str):
+    def __init__(self, name: str, relation_name: str):
         self.name = name
+        self.relation_name = relation_name
 
 class Relation:
-    def __init__(self, name: str, attributes: List[Attribute], tuples: List[List[str]]):
+    def __init__(self, name, *tuples):
         self.name = name
-        self.attributes = attributes
-        self.tuples = tuples
+        self.tuples = list(tuples)
+
+    def __str__(self):
+        tuples_str = "\n".join(str(t) for t in self.tuples)
+        return f"{self.name}:\n{tuples_str}"
+
 
 class TGD:
     def __init__(self, lhs: List[Attribute], rhs: List[Attribute]):
