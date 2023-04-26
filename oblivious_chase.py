@@ -1,4 +1,4 @@
-from standard_chase import standard_chase
+from standard_chase import *
 
 def oblivious_chase(D, sigma, max_iterations=None):
     i = 0

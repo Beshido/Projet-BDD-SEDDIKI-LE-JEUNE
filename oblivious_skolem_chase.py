@@ -1,4 +1,4 @@
-from standard_chase import standard_chas
+from standard_chase import *
 
 def oblivious_skolem_chase(D, sigma):
     while True:
