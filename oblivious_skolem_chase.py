@@ -26,3 +26,5 @@ def oblivious_skolem_chase(D, sigma):
         if not found_new_solution:
             break
     return all(e.is_satisfied_by(D) for e in sigma)
+
+
