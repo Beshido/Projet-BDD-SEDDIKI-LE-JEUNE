@@ -1,6 +1,13 @@
 from standard_chase import *
 
 def oblivious_skolem_chase(D, sigma):
+    """
+    Vérifie si la base de données D satisfait l'ensemble de contraintes sigma en utilisant l'algorithme Oblivious Skolem Chase.
+    Cet algorithme est une extension de l'algorithme Chase qui prend en compte les règles avec des variables existentielles en introduisant des Skolem terms.
+    :param D: la base de données à vérifier
+    :param sigma: l'ensemble de contraintes à vérifier
+    :return: True si D satisfait sigma, False sinon
+    """
     while True:
         found_new_solution = False
         for e in sigma:
