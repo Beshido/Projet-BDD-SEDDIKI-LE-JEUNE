@@ -25,6 +25,8 @@ def main():
     # Définition des contraintes
     constraints = [phone_tgd, email_egd]
 
+    database.constraints = constraints
+
     # Vérification des contraintes avec Standard Chase
     if database.is_conformant():
         print("La base de données satisfait toutes les contraintes.")
