@@ -73,7 +73,7 @@ class EGD:
                 rhs_values = [self.get_attribute_value(attr, tuple) for attr in self.rhs]
             if lhs_values != rhs_values:
                 return False
-    return True
+        return True
 
 
     def get_attribute_value(self, attr: Attribute, t: List[Tuple[str]]) -> str:

@@ -8,7 +8,7 @@ def main():
         "Person": Relation("Person",
                             ("LEJEUNE", "Alban", "0663296514", "lejeunealban94@gmail.com"),
                             ("SEDDIKI", "Bilal", "0663296514", "seddikibilal@gmail.com"),
-                            ("HAMIMI", "Dany", "0663296514", "danyestsupermoche@gmail.com"))
+                            ("HAMIMI", "Dany", "0663296514", "danyestsupermochegmail.com"))
     })
 
     # Définition des attributs
