@@ -6,9 +6,13 @@ def main():
     # Création de la base de données
     database = Database({
         "Person": Relation("Person",
+                            ("name", "surname", "phone", "email"),
                             ("LEJEUNE", "Alban", "0663296514", "lejeunealban94@gmail.com"),
-                            ("SEDDIKI", "Bilal", "0663296514", "seddikibilal@gmail.com"),
-                            ("HAMIMI", "Dany", "0663296514", "danyestsupermochegmail.com"))
+                            ("SEDDIKI", "Bilal", "0663296512", "seddikibilal@gmail.com"),
+                            ("HAMIMI", "Dany", "0663296511", "danyestsupermoche@gmail.com")),
+        "Employe": Relation("Employe",
+                            ("name", "prenom", "phone", "email", "id"),
+                            ("KAABECHE", "RAYANE", "0663296510", 5151555))
     })
 
     # Définition des attributs

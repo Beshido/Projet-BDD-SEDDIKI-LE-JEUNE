@@ -9,7 +9,17 @@ class Attribute:
 class Relation:
     def __init__(self, name, *tuples):
         self.name = name
-        self.tuples = list(tuples)
+        self.attr = tuples[0]
+        self.tuples = tuples[1:]
+    
+    def get_tuple(self):
+        d = []
+        for tuple in self.tuples:
+            current_element = {}
+            for attr, value in zip(self.attr, tuple):
+                current_element[attr] = value
+            d.append(current_element)
+        return d
 
     def __str__(self):
         tuples_str = "\n".join(str(t) for t in self.tuples)
@@ -22,28 +32,29 @@ class TGD:
         self.rhs = rhs
         self.applied_to = set()
 
-    def is_satisfied_by(self, database: Database) -> bool:
+    def is_satisfied_by(self, tuple):
         relation_name = self.lhs[0].relation_name
-        relation = database.relations.get(relation_name)
-        if relation is None:
-                return False
-        for tuple in relation.tuples:
-            if all(attr.name in tuple for attr in self.lhs):
-                return True
-        return False
-
-
-    def is_head_satisfied_by(self, t: List[Tuple[str]]) -> bool:
-        for a in self.rhs:
-            if a not in t:
+        if relation_name not in tuple:
+            return False
+        for attribute in self.lhs:
+            if attribute.name not in tuple[relation_name]:
                 return False
         return True
 
-    def mark_applied(self, t: List[Tuple[str]]) -> None:
-        self.applied_to.add(tuple(t))
+    def is_head_satisfied_by(self, tuple):
+        relation_name = self.rhs[0].relation_name
+        if relation_name not in tuple:
+            return False
+        for attribute in self.rhs:
+            if attribute.name not in tuple[relation_name]:
+                return False
+        return True
 
-    def is_applied_to(self, t: List[Tuple[str]]) -> bool:
-        return tuple(t) in self.applied_to
+    def mark_applied(self, tuple):
+        self.applied_to.add(tuple)
+
+    def is_applied_to(self, tuple):
+        return tuple in self.applied_to
 
     def get_new_tuple(self, t: List[Tuple[str]], d: List[List[Tuple[str]]]) -> List[Tuple[str]]:
         new_t = t.copy()
@@ -66,24 +77,25 @@ class EGD:
         self.rhs = rhs
         self.applied_to = set()
 
-    def is_satisfied_by(self, database: Database) -> bool:
-        for relation in database.relations.values():
-            for tuple in relation.tuples:
-                lhs_values = [self.get_attribute_value(attr, tuple) for attr in self.lhs]
-                rhs_values = [self.get_attribute_value(attr, tuple) for attr in self.rhs]
-            if lhs_values != rhs_values:
+    def is_satisfied_by(self, tuple):
+        for attribute in self.lhs:
+            relation_name = attribute.relation_name
+            if relation_name not in tuple or attribute.name not in tuple[relation_name]:
+                return False
+        for attribute in self.rhs:
+            relation_name = attribute.relation_name
+            if relation_name not in tuple or attribute.name not in tuple[relation_name]:
                 return False
         return True
 
+    def mark_applied(self, tuple):
+        self.applied_to.add(tuple)
+
+    def is_applied_to(self, tuple):
+        return tuple in self.applied_to
 
     def get_attribute_value(self, attr: Attribute, t: List[Tuple[str]]) -> str:
         for attribute in t:
             if attribute[0] == attr.name and attribute[1] == attr.relation_name:
                 return attribute[2]
         return ""
-
-    def mark_applied(self, t: List[Tuple[str]]) -> None:
-        self.applied_to.add(tuple(t))
-
-    def is_applied_to(self, t: List[Tuple[str]]) -> bool:
-        return tuple(t) in self.applied_to

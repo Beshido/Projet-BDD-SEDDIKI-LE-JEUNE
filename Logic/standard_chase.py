@@ -48,9 +48,9 @@ class Database:
         Retourne l'ensemble de tous les tuples de toutes les relations de la base de données.
         :return: un ensemble de tuples
         """
-        tuples = set()
-        for rel_name, rel in self.relations.items():
-            tuples.update(rel.tuples)
+        tuples = []
+        for _, rel in self.relations.items():
+            tuples.append({rel.name: rel.get_tuple()})
         return tuples
 
     def print_database(self):
