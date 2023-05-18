@@ -3,28 +3,27 @@ from standard_chase import *
 #import psycopg2
 
 def main():
+    person_relation = Relation("Person",
+        ("name", "surname", "phone", "email"),
+        ("LEJEUNE", "Alban", "0663296514", "Alban.LEJEUNE@gmail.com"),
+        ("SEDDIKI", "Bilal", "0663296512", "Bilal.SEDDIKI@gmail.com"),
+        ("HAMIMI", "Dany", "0663296511", "Dany.HAMIMI@gmail.com"))
+
+    employee_relation = Relation("Employe",
+        ("name", "surname", "phone", "email", "id"),
+        ("KAABECHE", "Rayane", "0663296510", "a@b", 5151555))
+
     # Création de la base de données
     database = Database({
-        "Person": Relation("Person",
-                            ("name", "surname", "phone", "email"),
-                            ("LEJEUNE", "Alban", "0663296514", "lejeunealban94@gmail.com"),
-                            ("SEDDIKI", "Bilal", "0663296512", "seddikibilal@gmail.com"),
-                            ("HAMIMI", "Dany", "0663296511", "danyestsupermoche@gmail.com")),
-        "Employe": Relation("Employe",
-                            ("name", "prenom", "phone", "email", "id"),
-                            ("KAABECHE", "RAYANE", "0663296510", 5151555))
+        "Person": person_relation
     })
 
-    # Définition des attributs
-    name_attr = Attribute("name", "Person")
-    phone_attr = Attribute("phone", "Person")
-    email_attr = Attribute("email", "Person")
-
     # Contrainte : Deux personnes ne peuvent pas avoir le même numéro de téléphone
-    phone_tgd = TGD([phone_attr], [name_attr])
+    phone_tgd = TGD("Person", ["phone"], ["name"])
 
-    # Contrainte : L'adresse email doit contenir le symbole "@"
-    email_egd = EGD([email_attr], [lambda t: "@" in t[0]])
+    # Contrainte : L'adresse email doit contenir le symbole "@" 
+    email_egd = EGD("Person", ["email"], [lambda t: f"{t['surname']}.{t['name']}@gmail.com"])
+
 
     # Définition des contraintes
     constraints = [phone_tgd, email_egd]
