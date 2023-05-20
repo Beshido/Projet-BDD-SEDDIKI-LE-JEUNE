@@ -12,7 +12,7 @@ def oblivious_chase(contraintes : list, tables : list, arret=None) -> bool :
                         contrainte.add_missing_tuples(table)
                         iteration += 1
                     elif isinstance(contrainte, EGD) :
-                        continue
+                        raise Exception("EGD pas compatible avec l'oblivious chase")
                     else :
                         raise Exception("Type de contrainte inconnu")
                     found_new_solution = True

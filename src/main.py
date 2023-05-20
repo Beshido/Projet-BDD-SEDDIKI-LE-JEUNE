@@ -41,7 +41,7 @@ if __name__ == "__main__":
     #else:
     #    print("Chase failed")
         
-    if oblivious_chase([contrainte1], tables, 2):
+    if oblivious_chase([contrainte1], tables, 50):
         print("Chase succeeded")
     else:
         print("Chase failed")
