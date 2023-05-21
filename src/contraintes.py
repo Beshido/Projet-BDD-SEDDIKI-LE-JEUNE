@@ -149,7 +149,7 @@ class EGD(Contraintes):
 
 def standard_chase(contraintes: list, tables: list) -> bool:
     found_new_solution = False
-    while found_new_solution:
+    while not found_new_solution:
         for contrainte in contraintes:
             for table in tables:
                 if contrainte.is_satisfied_by(table) and not contrainte.is_head_satisfied_by(table) and not contrainte.is_applied_to(table):
