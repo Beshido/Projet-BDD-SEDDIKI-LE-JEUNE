@@ -20,13 +20,15 @@ class Contraintes:
 class TGD(Contraintes):
     def is_satisfied_by(self, table: str) -> bool:
         if self.left[0] != table:
-            return False
+            return True
         command = f"SELECT {', '.join(x for x in self.left[1])} FROM {table};"
         self.cursor.execute(command)
         command_result = self.cursor.fetchall()
         return len(command_result) > 0
 
     def is_head_satisfied_by(self, table: str) -> bool:
+        if self.left[0] != table:
+            return True
         command = f"SELECT {', '.join(x for x in self.left[1])} FROM {table};"
         self.cursor.execute(command)
         command_result = self.cursor.fetchall()
@@ -61,13 +63,15 @@ class TGD(Contraintes):
 class EGD(Contraintes):
     def is_satisfied_by(self, table: str) -> bool:
         if not any(left[0] == table for left in self.left):
-            return False
+            return True
         command = f"SELECT {', '.join(attr for x in self.left for attr in x[1])} FROM {table};"
         self.cursor.execute(command)
         command_result = self.cursor.fetchall()
         return len(command_result) > 0
 
     def is_head_satisfied_by(self, table: str) -> bool:
+        if not any(left[0] == table for left in self.left):
+            return True
         join = []
         for left in self.left:
             table_name = left[0]
@@ -146,20 +150,3 @@ class EGD(Contraintes):
             where = " AND ".join(where)
             command = f"UPDATE {table} SET {set_value} FROM {from_table} WHERE {where};"
             self.cursor.execute(command)
-
-def standard_chase(contraintes: list, tables: list) -> bool:
-    found_new_solution = False
-    while not found_new_solution:
-        for contrainte in contraintes:
-            for table in tables:
-                if contrainte.is_satisfied_by(table) and not contrainte.is_head_satisfied_by(table) and not contrainte.is_applied_to(table):
-                    if isinstance(contrainte, TGD):
-                        contrainte.add_missing_tuples(table)
-                    elif isinstance(contrainte, EGD):
-                        contrainte.equalize(table)
-                    else:
-                        raise Exception("Unknown constraint type")
-                    contrainte.apply_to(table)
-                    found_new_solution = True
-    
-    return all(e.is_satisfied_by(table) for e in contraintes for table in tables)

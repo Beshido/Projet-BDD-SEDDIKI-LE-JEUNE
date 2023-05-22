@@ -1,6 +1,6 @@
 import psycopg2
-from contraintes import TGD, EGD, standard_chase
-from oblivious_chase import oblivious_chase
+from contraintes import TGD, EGD
+from algorithm import standard_chase, oblivious_chase
 
 DB_NAME = "projet"
 USER = "postgres"
@@ -36,15 +36,15 @@ if __name__ == "__main__":
 
     tables = ["Emprunt", "Livre", "Etudiant", "Lecteur"]
 
-    #if standard_chase([contrainte1, contrainte2], tables):
-    #    print("Chase succeeded")
-    #else:
-    #    print("Chase failed")
-        
-    if oblivious_chase([contrainte1], tables, 50):
-        print("Chase succeeded")
+    if standard_chase([contrainte1, contrainte2], tables):
+        print("Standard chase succeeded")
     else:
-        print("Chase failed")
+        print("Standard chase failed")
+        
+    if oblivious_chase([contrainte1], tables):
+        print("Oblivious chase succeeded")
+    else:
+        print("Oblivious chase failed")
 
     connection.commit()
 
